@@ -8,7 +8,7 @@
     },
     "definitions": {
         "keyCode":{
-            "summary":"The key code of the key to intercept",
+            "summary":"The key code of the key to intercept ( * (string) is also acceptable)",
             "type": "number",
             "example": 10
         },
@@ -60,13 +60,13 @@
         },
         "sx":{
             "summary":"The x scale factor",
-            "type": "number",
-            "example": 0.5
+            "type": "string",
+            "example": "0.5"
         },
         "sy":{
             "summary":"The y scale factor",
-            "type": "number",
-            "example": 0.5
+            "type": "string",
+            "example": "0.5"
         },
         "opacity": {
             "summary": "The opacity level (between 0 and 100)",
@@ -74,7 +74,7 @@
             "example": 100
         },
         "uri":{
-            "summary": "The URI of the app",
+            "summary": "The URI of the app (empty string, if unable to get URI status)",
             "type":"string",
             "example": "https://..."
         },
@@ -125,11 +125,11 @@
             "summary": "Whether the request succeeded",
             "type": "boolean",
             "example": "true"
-        }    
+        }
     },
     "methods": {
         "addAnimation":{
-            "summary": "(Version 2) Performs a set of animations",
+            "summary": "Performs the set of animations. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
@@ -187,6 +187,11 @@
                                     ],
                                     "default": "Linear",
                                     "example": "exp1"
+                                },
+                                "delay": {
+                                    "summary": "Set delay for an animation",
+                                    "type": "number",
+                                    "example": ""
                                 }                                
                             },
                             "required": [
@@ -216,6 +221,11 @@
                     },
                     "client":{
                         "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -229,21 +239,31 @@
             }
         },
         "addKeyListener":{
-            "summary": "(Version 2) Adds a key listener to an application.  The keys are bubbled up based on their z-order",
+            "summary": "Returns and adds a key listener to an application. The keys are bubbled up based on their z-order. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client":{
                         "$ref": "#/definitions/client"
                     },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
                     "keys":{
-                        "summary":"A list of keys on which to add a listener for the specified application",
+                        "summary":"A list of keys on which to add a listener for the specified application.",
                         "type": "array",
                         "items": {
                             "type": "object",
                             "properties": {
                                 "keyCode":{
                                     "$ref": "#/definitions/keyCode"
+                                },
+                                "nativekeyCode": {
+                                    "summary": "The native key code of the key to be intercepted.",
+                                    "type": "number",
+                                    "example": ""
                                 },
                                 "modifiers":{
                                     "$ref": "#/definitions/modifiers"
@@ -270,7 +290,7 @@
                 },
                 "required": [
                     "client",
-                    "keys"                    
+                    "keys"
                 ]
             },
             "result": {
@@ -278,12 +298,17 @@
             }
         },
         "createDisplay": {
-            "summary": " Creates a display for the specified client using the configuration parameters",
+            "summary": " Creates a display for the specified client using the configuration parameters.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client":{
                         "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     },
                     "displayName": {
                         "$ref": "#/definitions/displayName"
@@ -312,6 +337,16 @@
                         "summary": "The height of the virtual display",
                         "type": "number",
                         "example": 1080
+                    },
+                    "topmost": {
+                        "summary": "Whether to set topmost (true) or not (false)",
+                        "type": "boolean",
+                        "example":""
+                    },
+                    "focus": {
+                        "summary": "Whether to setfocus (true) or not (false)",
+                        "type": "boolean",
+                        "example": ""
                     }
                 },
                 "required": [
@@ -329,7 +364,7 @@
             }
         },
         "destroy":{
-            "summary": "(Version 2) Destroys an application",
+            "summary": "Destroys an application. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `OnDestroyed` | Triggers when a runtime is destroyed |",
             "events": ["onDestroyed"],
             "params": {
                 "type": "object",
@@ -411,6 +446,11 @@
                     "client": {
                         "$ref": "#/definitions/client"
                     },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
                     "enable": {
                         "summary": "Whether to enable (`true`) or disable (`false`) a virtual display",
                         "type": "boolean",
@@ -427,7 +467,7 @@
             }
         },
         "generateKey": {
-            "summary": "(Version 2) Triggers key events (key press and release)",
+            "summary": "Triggers the key events (key press and release).",
             "params": {
                 "type":"object",
                 "properties": {
@@ -450,6 +490,11 @@
                                 },
                                 "callsign": {
                                     "$ref": "#/definitions/callsign"
+                                },
+                                "client": {
+                                    "summary": "The client name can be used instead of callsign",
+                                    "type": "string",
+                                    "example": "Cobalt"
                                 }
                             },
                             "required": [
@@ -461,7 +506,7 @@
                     }
                 },
                 "required": [
-                    "keys"                    
+                    "keys"
                 ]
             },
             "result": {
@@ -469,7 +514,7 @@
             }
         },
         "getAvailableTypes": {
-            "summary": "(Version 2) Returns the list of application types available on the firmware",
+            "summary": "Returns the list of application types available on the firmware. \n \n### Events\n \n No Events.",
             "result": {
                 "type": "object",
                 "properties": {
@@ -492,12 +537,17 @@
             }
         },
         "getBounds": {
-            "summary": "Gets the bounds of the specified client",
+            "summary": "Gets the bounds of the specified client. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -507,29 +557,38 @@
             "result": {
                 "type": "object",
                 "properties": {
-                    "x":{
-                        "$ref": "#/definitions/x"
-                    },
-                    "y":{
-                        "$ref": "#/definitions/y"
-                    },
-                    "w":{
-                        "$ref": "#/definitions/w"
-                    },
-                    "h":{
-                        "$ref": "#/definitions/h"
+                    "bounds": {
+                        "type": "object",
+                            "properties": {
+                                "x":{
+                                    "$ref": "#/definitions/x"
+                                },
+                                "y":{
+                                    "$ref": "#/definitions/y"
+                                },
+                                "w":{
+                                    "$ref": "#/definitions/w"
+                                },
+                                "h":{
+                                    "$ref": "#/definitions/h"
+                                }
+                            },
+                            "required": [
+                                "x",
+                                "y",
+                                "w",
+                                "h"
+                            ] 
                     },
                     "success":{
                         "$ref": "#/definitions/success"
                     }
                 },
                 "required": [
-                    "x",
-                    "y",
-                    "w",
-                    "h"
+                    "bounds",
+                    "success"
                 ]
-            }
+            }    
         },
         "getClients": {
             "summary": "Gets a list of clients.",
@@ -555,7 +614,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -576,7 +640,7 @@
                     "holePunch",
                     "success"
                 ]
-            }            
+            }
         },
         "getKeyRepeatsEnabled": {
             "summary": "Returns whether key repeating is enabled or disabled",
@@ -599,7 +663,7 @@
             }
         },
         "getLastWakeupKey": {
-            "summary": "Returns the last key press prior to a device wakeup",
+            "summary": "Returns the last key press prior to a device wakeup. This method considers only the IR or Bluetooth remote control key wakeup. \n \n### Events\n \n No Events.",
             "result": {
                 "type": "object",
                 "properties": {
@@ -662,7 +726,7 @@
                     "logLevel",
                     "success"
                 ]
-            }            
+            }
         },
         "getOpacity":{
             "summary": "Gets the opacity of the specified client",
@@ -670,7 +734,7 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     }
                 },
                 "required": [
@@ -694,12 +758,12 @@
             }
         },
         "getScale":{
-            "summary": "(Version 2) Returns the scale of an application",
+            "summary": "Returns the scale of an application. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     }
                 },
                 "required": [
@@ -709,13 +773,13 @@
             "result": {
                 "type": "object",
                 "properties": {
-                    "sx":{
+                    "sx": {
                         "$ref": "#/definitions/sx"
                     },
-                    "sy":{
+                    "sy": {
                         "$ref": "#/definitions/sy"
                     },
-                    "success":{
+                    "success": {
                         "$ref": "#/definitions/success"
                     }
                 },
@@ -749,7 +813,7 @@
             }
         },
         "getState":{
-            "summary": "(Version 2) Returns the state of all applications",
+            "summary": "Returns the state of all applications.\n \n### Events\n \n No Events.",
             "result": {
                 "type": "object",
                 "properties": {
@@ -769,7 +833,7 @@
                                 },
                                 "uri":{
                                     "$ref": "#/definitions/uri"
-                                }                                
+                                }
                             },
                             "required": [
                                 "callsign",
@@ -789,11 +853,11 @@
             }
         },
         "getSystemResourceInfo":{
-            "summary": "(Version 2) Returns system resource information about each application",
+            "summary": "Returns the information of system resources used by each application. \n \n### Events\n \n No Events.",
             "result": {
                 "type": "object",
                 "properties": {
-                    "runtimes": {
+                    "types": {
                         "summary": "A list of apps and their system resource information",
                         "type": "array",
                         "items": {
@@ -811,7 +875,7 @@
                                     "summary": "The amount of graphics memory the runtime is consuming in kb (if supported)",
                                     "type":"integer",
                                     "example": 50
-                                }                                
+                                }
                             },
                             "required": [
                                 "callsign",
@@ -825,18 +889,23 @@
                     }
                 },
                 "required": [
-                    "runtimes",
+                    "types",
                     "success"
                 ]
             }
         },
         "getVirtualDisplayEnabled":{
-            "summary": "Returns whether virtual display is enabled or disabled for the specified client",
+            "summary": "Returns whether virtual display is enabled or disabled for the specified client.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -859,15 +928,20 @@
                     "enabled",
                     "success"
                 ]
-            }            
+            }
         },
         "getVirtualResolution": {
-            "summary": "Returns whether virtual display is enabled or disabled for the specified client",
+            "summary": "Returns the virtual display resolution for the specified client.\n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
                         "$ref": "#/definitions/client"              
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -881,7 +955,7 @@
                         "$ref": "#/definitions/w"
                     },
                     "h": {
-                        "$ref": "#/definitions/h"                        
+                        "$ref": "#/definitions/h"
                     },
                     "success":{
                         "$ref": "#/definitions/success"
@@ -900,7 +974,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -955,7 +1034,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -967,8 +1051,8 @@
             }
         },
         "launch":{
-            "summary": "Launches an application",
-            "events": ["onApplicationLaunched"],
+            "summary": "Launches an application. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `onLaunched` | Triggers when the runtime of an application is launched |",
+            "events": ["onApplicationLaunched","onLaunched"],
             "params": {
                 "type": "object",
                 "properties": {
@@ -1027,6 +1111,26 @@
                     },
                     "displayName":{
                         "$ref": "#/definitions/displayName"
+                    },    
+                    "scaleToFit": {
+                        "summary": "Whether the app can be scaled to fit the current bounds. Default is 'false'",
+                        "type": "boolean",
+                        "exampe": "" 
+                    },
+                    "holePunch": {
+                        "summary": "Whether the video hole punching can be enabled for the client. Default is 'true'",
+                        "type": "boolean",
+                        "example": ""
+                    },
+                    "topmost": {
+                        "summary": "Whether the app appears above all other apps on the display. Default is 'false'",
+                        "type": "boolean",
+                        "example": ""
+                    },
+                    "focus": {
+                        "summary": "Wether the app should be under focus. Default is 'false'",
+                        "type": "boolean",
+                        "example": ""
                     }
                 },
                 "required": [
@@ -1036,7 +1140,21 @@
                 ]
             },
             "result": {
-                "$ref": "#/definitions/result"
+                "type": "object",
+                "properties": {
+                    "launchType": {
+                        "summary": "The launch type of client",
+                        "type": "string",
+                        "example": "activate"
+                    },
+                    "success": {
+                        "$ref": "#/definitions/success"
+                    }
+                },
+                "required": [
+                    "launchType",
+                    "success"
+                ]
             }
         },
         "moveBehind":{
@@ -1045,7 +1163,7 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     },
                     "target": {
                         "summary": "The target in which the client moves behind",
@@ -1068,7 +1186,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -1085,7 +1208,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -1115,6 +1243,11 @@
                 "properties": {
                     "client": {
                         "$ref": "#/definitions/client"              
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -1126,7 +1259,7 @@
             }
         },
         "removeKeyIntercept": {
-            "summary": "Removes a key intercept",
+            "summary": "Removes a key intercept. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
@@ -1151,15 +1284,20 @@
             }
         },
         "removeKeyListener": {
-            "summary": "(Version 2) Removes a key listener for an application",
+            "summary": "Removes a key listener for an application. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client":{
                         "$ref": "#/definitions/client"
                     },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
                     "keys":{
-                        "summary":"A list of keys for which to remove a listener for the specified application",
+                        "summary":"A list of keys for which to remove a listener for the specified application ( * (string) is also acceptable",
                         "type": "array",
                         "items": {
                             "type": "object",
@@ -1180,7 +1318,7 @@
                 },
                 "required": [
                     "client",
-                    "keys"                    
+                    "keys"
                 ]
             },
             "result": {
@@ -1193,7 +1331,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     },
                     "x":{
                         "$ref": "#/definitions/x"
@@ -1220,13 +1363,18 @@
                 "$ref": "#/definitions/result"
             }
         },
-        "SetBounds": {
-            "summary": "Sets the bounds of the specified client",
+        "setBounds": {
+            "summary": "Sets the bounds of the specified client. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     },
                     "x":{
                         "$ref": "#/definitions/x"
@@ -1259,7 +1407,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     }
                 },
                 "required": [
@@ -1278,6 +1431,11 @@
                     "client": {
                         "$ref": "#/definitions/client"              
                     },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
                     "holePunch": {
                         "$ref": "#/definitions/holePunch"
                     }
@@ -1292,14 +1450,14 @@
             }
         },
         "setInactivityInterval": {
-            "summary": "Sets the inactivity notification interval",
+            "summary": "Sets the inactivity notification interval. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `onUserInactivity` | Triggers when the device is inactive for a period of time |",
             "params": {
                 "type":"object",
                 "properties": {
                     "interval": {
                         "summary": "The inactivity event interval in minutes",
                         "type": "integer",
-                        "example": 15             
+                        "example": 15
                     }
                 },
                 "required": [
@@ -1316,7 +1474,7 @@
                 "type":"object",
                 "properties": {
                     "logLevel": {
-                        "$ref": "#/definitions/logLevel"              
+                        "$ref": "#/definitions/logLevel"
                     }
                 },
                 "required": [
@@ -1325,10 +1483,10 @@
             },
             "result": {
                 "$ref": "#/definitions/result"
-            }            
+            }
         },
-        "setMemoryMonitory":{
-            "summary": "Enables or disables RAM memory monitoring on the device",
+        "setMemoryMonitor":{
+            "summary": "Enables or disables RAM memory monitoring on the device. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `onDeviceLowRamWarning` | Triggers when the RAM memory on the device exceeds the configured `lowRam` threshold value | \n | `onDeviceCriticallyLowRamWarning` | Triggers when the RAM memory on the device exceeds the configured `criticallyLowRam` threshold value | \n | `onDeviceLowRamWarningCleared` | Triggers when the RAM memory on the device no longer exceeds the configured `lowRam` threshold value | \n `onDeviceCriticallyLowRamWarningCleared` | Triggers when the RAM memory on the device no longer exceeds the configured `criticallyLowRam` threshold value |",
             "params": {
                 "type":"object",
                 "properties": {
@@ -1362,7 +1520,7 @@
             },
             "result": {
                 "$ref": "#/definitions/result"
-            }            
+            }
         },
         "setOpacity":{
             "summary": "Sets the opacity of the specified client",
@@ -1370,7 +1528,7 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     },
                     "opacity":{
                         "$ref": "#/definitions/opacity"
@@ -1386,12 +1544,17 @@
             }
         },
         "setScale": {
-            "summary": "(Version 2) Scales an application",
+            "summary": "Scales an application. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     },
                     "sx":{
                         "$ref": "#/definitions/sx"
@@ -1409,7 +1572,6 @@
             "result": {
                 "$ref": "#/definitions/result"
             }
-
         },
         "setScreenResolution": {
             "summary": "Sets the screen resolution",
@@ -1433,15 +1595,20 @@
             }
         },
         "setTopmost":{
-            "summary": "Sets whether the specified client appears above all other clients on the display",
+            "summary": "Sets whether the specified client appears above all other clients on the display. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     },
                     "topmost":{
-                        "summary": "`true` to set the client as the top most client",
+                        "summary": "`true` to set the client as the top most client.",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "focus": {
+                        "summary": "`true' to set focus for the client",
                         "type": "boolean",
                         "example": true
                     }
@@ -1456,12 +1623,12 @@
             }
         },
         "setVirtualResolution": {
-            "summary": "Sets the virtual resolution for the specified client",
+            "summary": "Sets the virtual resolution for the specified client. \n \n### Events\n \n No Events.",
             "params": {
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
                     },
                     "width":{
                         "summary": "The width of the virtual resolution",
@@ -1475,9 +1642,7 @@
                     }
                 },
                 "required": [
-                    "client",
-                    "width",
-                    "height"
+                    "client"
                 ]
             },
             "result": {
@@ -1490,7 +1655,12 @@
                 "type":"object",
                 "properties": {
                     "client": {
-                        "$ref": "#/definitions/client"              
+                        "$ref": "#/definitions/client"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
                     },
                     "visible":{
                         "$ref": "#/definitions/visible"
@@ -1513,7 +1683,7 @@
                     "displayTime": {
                         "summary": "The amount of the time to show the splash screen",
                         "type": "number",
-                        "example": 5              
+                        "example": 5
                     }
                 },
                 "required": [
@@ -1544,13 +1714,13 @@
             }
         },
         "suspend": {
-            "summary": "(Version 2) Suspends an application",
+            "summary": "Suspends an application. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `onSuspended` | Triggers when the runtime of an application is suspended |",
             "events": ["onSuspended"],
             "params": {
                 "type":"object",
                 "properties": {
                     "callsign": {
-                        "$ref": "#/definitions/callsign"              
+                        "$ref": "#/definitions/callsign"
                     }
                 },
                 "required": [
@@ -1559,7 +1729,356 @@
             },
             "result": {
                 "$ref": "#/definitions/result"
+            }
+        },
+        "enableEasterEggs":{
+            "summary": "Enables the Easter Eggs. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "enable":{
+                        "summary": "true to enable Easter Eggs, otherwise false",
+                        "type": "boolean",
+                        "example": true 
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "getScreenshot": {
+            "summary": "Captures a screenshot. \n \n### Events \n| Event | Description | \n| :----------- | :----------- |\n| `onScreenshotComplete` | Triggers when a screenshot is captured successfully |",
+            "result":{
+                "$ref": "#/definitions/result"
+            }
+        },
+        "hideAllClients": {
+            "summary": "Hides all the clients. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "hide": {
+                        "summary": "true to hide all the clients, otherwise false",
+                        "type": "boolean",
+                        "example": true
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "exitAgingMode": {
+            "summary": "Exits from the Aging mode. \n \n### Events\n \n No Events.",
+            "result": {
+                "$ref": "#/definitions/result"
             }            
+        },
+        "launchResidentApp": {
+            "summary": "Launches the Resident application. \n \n### Events\n \n No Events.",
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "hideFullScreenImage":{
+            "summary": "Hides the Full Screen Image. \n \n### Events\n \n No Events.",
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "showFullScreenImage": {
+            "summary": "Shows the Full Screen Image. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "path": {
+                        "summary": "The image path",
+                        "type": "string",
+                        "example": "/tmp/netflix.png"
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "getSystemMemory": {
+            "summary": "Gets the System Memory information. \n \n### Events\n \n No Events.",
+            "result": {
+                "type":"object",
+                "properties": {
+                    "freeRam": {
+                        "summary": "The free RAM memory in kilobytes",
+                        "type": "number",
+                        "example": "321944"
+                    },
+                    "swapRam": {
+                        "summary": "The swap memory in kilobytes",
+                        "type": "number",
+                        "example": "0"
+                    },
+                    "totalRam": {
+                        "summary": "The total RAM memory in kilobytes",
+                        "type": "number",
+                        "example": "624644"
+                    },
+                    "success": {
+                        "$ref": "#/definitions/success"
+                    }
+                },
+                "required": [
+                    "success",
+                    "freeRam",
+                    "swapRam",
+                    "totalRam"
+                ]
+            }
+        },
+        "resumeApplication": {
+            "summary": "Resumes an application. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "client": {
+                        "summary": "The client name",
+                        "type": "string",
+                        "example": "HtmlApp"
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "suspendApplication": {
+            "summary": "Suspends an application. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "client": {
+                        "summary": "The client name",
+                        "type": "string",
+                        "example": "HtmlApp"
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "launchapplication": {
+            "summary": "Launches an application. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "client": {
+                        "summary": "The client name",
+                        "type": "string",
+                        "example": "HtmlApp"
+                    },
+                    "uri": {
+                        "summary": "The client uri",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
+                    "mimeType": {
+                        "summary": "The mime type",
+                        "type": "string",
+                        "example": "application/native"
+                    },
+                    "topmost": {
+                        "summary": "true to put the application at the top, otherwise false",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "focus": {
+                        "summary": "true to put the application above all other applications, otherwise false",
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "required": [
+                    "client",
+                    "uri",
+                    "mimeType"
+                ]
+            },
+             "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "injectKey": {
+            "summary": "Injects the keys. \n \n### Events\n \n No Events.",
+            "params": {
+                "type":"object",
+                "properties": {
+                    "keycode": {
+                        "$ref": "#/definitions/keyCode"
+                    },
+                    "modifiers": {
+                        "$ref": "#/definitions/modifiers"
+                    } 
+                },
+                "required": [
+                    "keycode",
+                    "modifiers"
+                ]
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "removeKeyMetadataListener": {
+            "summary": "Removes the key metadata listeners. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "client": {
+                        "summary": "The client name",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    }
+                },
+                "required": [
+                    "client"
+                ]
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "addKeyMetadataListener":{
+            "summary": "Adds the key metadata listeners. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "client": {
+                        "summary": "The client name",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    },
+                    "callsign": {
+                        "summary": "The application callsign can be used instead of client",
+                        "type": "string",
+                        "example": "org.rdk.Netflix"
+                    }
+                },
+                "required": [
+                    "client"
+                ]
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "addKeyIntercepts": {
+            "summary": "Adds a key intercepts. \n \n### Events\n \n No Events.",
+            "params": {
+                "type":"object",
+                "properties": {
+                    "intercepts": {
+                        "summary": "A list of intercepts",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "client":{
+                                    "$ref": "#/definitions/client"
+                                },
+                                "keys":{
+                                    "summary": "A list of keys to simulate",
+                                    "type": "array",
+                                    "items":{
+                                        "type": "object",
+                                        "properties": {
+                                            "keycode": {
+                                                "$ref": "#/definitions/keyCode"
+                                            },
+                                            "modifiers": {
+                                                "$ref": "#/definitions/modifiers"
+                                            }
+                                        },
+                                        "required": [
+                                            "keycode",
+                                            "modifiers",
+                                            "keys"
+                                        ]
+                                    }
+                                }
+                            },
+                            "required": [
+                                "client",
+                                "keys"
+                            ]
+                        }
+                    }
+                }
+            },
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "resetInactivityTime":{
+            "summary": "Resets the inactive time. \n \n### Events\n \n No Events.",
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "launchFactoryAppShortcut":{
+            "summary": "Shortcut to launch the factory application. \n \n### Events\n \n No Events.",
+            "result": {
+                "$ref": "#/definitions/result"
+            }
+        },
+        "launchFactoryApp":{
+            "summary": "Launch the factory application. \n \n### Events\n \n No Events.",
+            "params": {
+                "type": "object",
+                "properties":{
+                    "startup": {
+                        "summary": "`true` to start factory app during startup, otherwise `false`",
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "resetagingtime": {
+                        "summary": "`true` to reset the aging time, otherwise `false`",
+                        "type": "boolean",
+                        "example": "true"
+                    },
+                    "nokillresapp": {
+                        "summary": "`true` to not destroy the resident app, otherwise `false`",
+                        "type": "boolean",
+                        "example": "true"
+                    }
+                },
+                "required": [
+                    "startup",
+                    "resetagingtime",
+                    "nokillresapp"
+                ]
+            },
+            "result": {
+                "type": "object",
+                "properties": {
+                    "launchType": {
+                        "summary": "The launch type of client",
+                        "type": "string",
+                        "example": "create"
+                    },
+                    "success": {
+                        "$ref": "#/definitions/success"
+                    }
+                },
+                "required": [
+                    "success"
+                ]
+            }
         }
     },
     "events": {
@@ -1807,6 +2326,64 @@
                 },
                 "required": [
                     "callsign"
+                ]
+            }
+        },
+        "onPluginSuspended":{
+            "summary": "Triggered when a plugin is suspended",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "client":{
+                        "$ref": "#/definitions/client" 
+                    }
+                },
+                "required": [
+                    "client"
+                ]
+            }
+        },
+        "onScreenshotComplete":{
+            "summary": "Triggered when a screenshot is captured successfully using `getScreenshot` method",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "imageData":{
+                        "summary": "Hexadecimal data of image",
+                        "type": "string",
+                        "example": ""
+                    }
+                },
+                "required": [
+                    "imageData"
+                ]
+            }
+        },
+        "onBlur":{
+            "summary": "Triggered when the previously focused client is blurred, and the new client is set to focus.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "client":{
+                        "$ref": "#/definitions/client"
+                    }
+                },
+                "required": [
+                    "client"
+                ]
+            }
+        },
+        "onFocus":{
+            "summary": "Triggered when a client is set to focus.",
+            "params": {
+                "type": "object",
+                "properties": {
+                    "client":{
+                        "$ref": "#/definitions/client"
+                    }
+                },
+                "required": [
+                    "client"
                 ]
             }
         }
